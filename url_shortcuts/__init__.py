@@ -20,6 +20,8 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['CSRF_ENABLED'] = True
 
 db  = SQLAlchemy(app)
 migrate = Migrate(app, db)
