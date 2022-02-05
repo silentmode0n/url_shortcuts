@@ -12,7 +12,7 @@ import uuid
 import os
 
 
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'very very secret key'
+SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
 DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///shortcuts.db'
 
 
