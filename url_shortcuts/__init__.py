@@ -9,12 +9,17 @@ from flask import redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import uuid
+import os
+
+
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'very very secret key'
+DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///shortcuts.db'
 
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'very very secret key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shortcuts.db'
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 
 db  = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -55,7 +60,7 @@ def redirect_url(shortcut_id):
 
     if shortcut:
         return redirect(shortcut.url)
-        
+
     else:
         flash('Invalid link')
         return redirect(url_for('index'))
