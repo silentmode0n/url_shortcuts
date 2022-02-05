@@ -2,11 +2,13 @@
 name = "url_shortcuts"
 version = "0.1.0"
 description = ""
-authors = ["makaroshaa <as-makar@ya.ru>"]
+authors = ["silenmode0n <as.makar@ya.ru>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 Flask = "^2.0.2"
+Flask-SQLAlchemy = "^2.5.1"
+Flask-Migrate = "^3.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
