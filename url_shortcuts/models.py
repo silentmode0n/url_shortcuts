@@ -8,3 +8,6 @@ class Shortcuts(db.Model):
     shortcut_id = db.Column(db.String(80), unique=True, nullable=False)
     url = db.Column(db.String(500), nullable=False)
     created = db.Column(db.DateTime(), default=datetime.now(), nullable=False)
+
+    def __repr__(self):
+        return '<Shortcut id:{} link:{}>'.format(self.shortcut_id, self.url)
