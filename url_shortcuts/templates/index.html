@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Welcome to Url Shortcuts {% endblock %}</h1>
+    <div>
+        <form method="post" action="{{url_for('index')}}">
+            <div>
+                <label>URL</label>
+                <input 
+                    type="text" 
+                    name="url"
+                    placeholder="Enter original URL"
+                    autofocus></input>
+            </div>
+            <div>   
+                <label>Custom Shortcut name</label>
+                <input 
+                    type="text" 
+                    name="custom_shortcut"
+                    placeholder="Enter you like shortcut (optional)"></input>
+            </div>
+            <div>
+                <input type="submit" label="Shorten"></input>
+            </div>
+        </form>
+    </div>
+{% endblock %}
