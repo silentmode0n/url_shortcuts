@@ -1,9 +1,14 @@
 __version__ = '0.1.0'
 
+
 from flask import Flask
 from flask import render_template
+from flask import request
+from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from url_shortcuts.models import Shortcuts
+import uuid
 
 
 app = Flask(__name__)
@@ -15,7 +20,26 @@ db  = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-@app.route('/')
+def generate_shortcut_id():
+    return uuid.uuid4().hex[:8]
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        url = request.form.get('url')
+
+        if not url:
+            flash('URL must be filled')
+        else:
+            shortcut_id = generate_shortcut_id()
+            new_item = Shortcuts(url=url, shortcut_id=shortcut_id)
+            db.session.add(new_item)
+            db.session.commit()
+            shortcut_url = request.host_url + shortcut_id
+            flash('Shortcut created')
+
+            render_template('index.html', shortcut_url=shortcut_url)
+
     return render_template('index.html')
 

@@ -12,16 +12,14 @@
                     placeholder="Enter original URL"
                     autofocus></input>
             </div>
-            <div>   
-                <label>Custom Shortcut name</label>
-                <input 
-                    type="text" 
-                    name="custom_shortcut"
-                    placeholder="Enter you like shortcut (optional)"></input>
-            </div>
             <div>
                 <input type="submit" label="Shorten"></input>
             </div>
         </form>
     </div>
+    {% if shortcut_url %}
+    <div>
+        <a href="{{ shortcut_url }}" target="_blank">{{ shortcut_url }}</a>
+    </div>
+    {% endif %}
 {% endblock %}
