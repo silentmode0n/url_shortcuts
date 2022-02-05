@@ -35,13 +35,15 @@ def index():
             flash('URL must be filled')
         else:
             shortcut_id = generate_shortcut_id()
+            print('shortcut_id ', shortcut_id)
             new_item = Shortcuts(url=url, shortcut_id=shortcut_id)
             db.session.add(new_item)
             db.session.commit()
             shortcut_url = request.host_url + shortcut_id
+            print('shortcut_url ', shortcut_url)
             flash('Shortcut created')
 
-            render_template('index.html', shortcut_url=shortcut_url)
+            return render_template('index.html', shortcut_url=shortcut_url)
 
     return render_template('index.html')
 
