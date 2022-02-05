@@ -13,7 +13,7 @@ import os
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
-DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///shortcuts.db'
+DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///shortcuts.db'
 
 
 app = Flask(__name__)
