@@ -14,6 +14,8 @@ import os
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
 DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///shortcuts.db'
+if DATABASE_URI.startswith("postgres://"):
+    DATABASE_URI = DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
 
 app = Flask(__name__)
