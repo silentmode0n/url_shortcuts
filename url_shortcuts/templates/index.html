@@ -1,25 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to Url Shortcuts {% endblock %}</h1>
-    <div>
-        <form method="post" action="{{url_for('index')}}">
-            <div>
-                <label>URL</label>
-                <input 
-                    type="text" 
-                    name="url"
-                    placeholder="Enter original URL"
-                    autofocus></input>
-            </div>
-            <div>
-                <input type="submit" label="Shorten"></input>
-            </div>
-        </form>
+    <div class="column col-6 col-mx-auto">
+        <div class="column">
+            <form method="post" action="{{ url_for('index') }}">
+                <div class="form-group">
+                    <label class="form-label" for="input-url">Url</label>
+                    <input class="form-input" type="text" name="url" id="input-url" placeholder="Enter original URL" autofocus>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary" type="submit" name="action">Shorten<i class="icon icon-arrow-right"></i></button>
+                </div>
+            </form>
+        </div>
+        <br>
+        {% if shortcut_url %}
+        <div class="column">
+            <a href="{{ shortcut_url }}" class="label label-primary" target="_blank">{{ shortcut_url }}</a>
+        </div>
+        {% endif %}
     </div>
-    {% if shortcut_url %}
-    <div>
-        <a href="{{ shortcut_url }}" target="_blank">{{ shortcut_url }}</a>
-    </div>
-    {% endif %}
 {% endblock %}

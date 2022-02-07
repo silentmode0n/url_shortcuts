@@ -1,15 +1,36 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre.min.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre-icons.min.css') }}"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta charset="utf-8">
-    <title>{% block title %} {% endblock %}</title>
+    <title>Welcome to Url Shortcuts</title>
   </head>
   <body>
-    <div>
-        {% for message in get_flashed_messages() %}
-            <div>{{ message }}</div>
-        {% endfor %}
-        {% block content %} {% endblock %}
+    <div class="container">
+      <header class="navbar">
+        <section class="navbar-section">
+          <a href="{{ url_for('index') }}" class="navbar-brand text-bold mr-2">Url Shortcuts</a>
+          <a href="https://github.com/silentmode0n/url_shortcuts" class="btn btn-link">GitHub</a>
+        </section>
+        <!-- Comming soon
+        <section class="navbar-section">
+          <div class="input-group input-inline">
+            <input class="form-input" type="text" placeholder="search">
+            <button class="btn btn-primary input-group-btn">Search</button>
+          </div>
+        </section>
+      -->
+      </header>
+      <div class="column  col-6 col-mx-auto">
+          {% for message in get_flashed_messages() %}
+              <div class="toast toast-warning">{{ message }}</div>
+          {% endfor %}
+      </div>
+          {% block content %} {% endblock %}
     </div>
   </body>
 </html>
