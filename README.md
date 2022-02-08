@@ -11,6 +11,7 @@ Not finished...
 
 ## Coming soon
 
++ ~~Sessions~~
 + Login and Profile
 + Set password on link (*optional*)
 + Manual input shortcut id
@@ -21,6 +22,7 @@ Not finished...
 
 ## Versions
 
++ 0.2.1 *added flash message types*
 + 0.2.0 *sessions added*
 + 0.1.1 *CSS added*
 + 0.1.0

@@ -1,4 +1,4 @@
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 
 from flask import Flask, url_for
@@ -42,6 +42,19 @@ def generate_session_id():
     return uuid.uuid4().hex
 
 
+def push_message(message, type='primary'):
+    types = {
+        'primary': 'PRIMARY: ',
+        'success': 'SUCCESS: ',
+        'error': 'ERROR: ',
+    }
+    if type in types:
+        message = types[type] + message
+    else:
+        message = types['primary'] + message
+    flash(message)
+
+
 @app.before_request
 def load_session_id():
     session_id = session.get("session_id")
@@ -55,25 +68,20 @@ def load_session_id():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    message = None
-
     if request.method == 'POST':
         url = request.form.get('url')
 
         if not url:
-            message = 'URL must be filled'
+            push_message('URL must be filled', type='error')
         else:
             shortcut_id = generate_shortcut_id()
             new_item = Shortcuts(url=url, shortcut_id=shortcut_id, session_id=g.session_id)
             db.session.add(new_item)
             db.session.commit()
-            message = 'Shortcut created'
+            push_message('Shortcut created', type='success')
             
     shortcuts = Shortcuts.query.filter_by(session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
     shortcuts = [request.host_url + sh.shortcut_id for sh in shortcuts]
-
-    if message:
-        flash(message)
 
     return render_template('index.html', shortcuts=shortcuts)
 
@@ -87,7 +95,7 @@ def redirect_url(shortcut_id):
         return redirect(shortcut.url)
 
     else:
-        flash('Invalid link')
+        push_message('Invalid link', type='error')
         return redirect(url_for('index'))
 
 

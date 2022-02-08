@@ -29,7 +29,13 @@
       </header>
       <div class="column  col-6 col-mx-auto">
           {% for message in get_flashed_messages() %}
-              <div class="toast toast-warning">{{ message }}</div>
+            {% if message.split(':')[0] == 'SUCCESS' %}  
+              <div class="toast toast-success">{{ message }}</div>
+            {% elif message.split(':')[0] == 'ERROR' %}
+              <div class="toast toast-error">{{ message }}</div>
+            {% else %}
+            <div class="toast toast-primary">{{ message }}</div>
+            {% endif %}
           {% endfor %}
       </div>
           {% block content %} {% endblock %}
