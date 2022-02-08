@@ -5,7 +5,22 @@
 It's my first project with Flask framework.
 A simple web app that creates shortcuts for long urls.
 
+## Status
+
+Not finished...
+
+## Coming soon
+
++ Login and Profile
++ Set password on link (*optional*)
++ Manual input shortcut id
++ QR-code for link
++ Statistics on transitions
++ Title for link
++ API
+
 ## Versions
 
-+ 0.1.1 *add CSS*
++ 0.2.0 *sessions added*
++ 0.1.1 *CSS added*
 + 0.1.0

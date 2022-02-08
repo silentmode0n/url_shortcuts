@@ -14,9 +14,15 @@
             </form>
         </div>
         <br>
-        {% if shortcut_url %}
+        {% if shortcuts %}
         <div class="column">
-            <a href="{{ shortcut_url }}" class="label label-primary" target="_blank">{{ shortcut_url }}</a>
+            {% for shortcut in shortcuts %}
+            <div class="column">
+                <div class="chip">
+                    <a href="{{ shortcut }}" target="_blank" role="button">{{ shortcut }}</a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
         {% endif %}
     </div>
