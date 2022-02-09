@@ -1,4 +1,4 @@
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 
 from flask import Flask, url_for
@@ -10,6 +10,8 @@ from flask import session
 from flask import g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import PendingRollbackError
 import uuid
 import os
 
@@ -42,6 +44,12 @@ def generate_session_id():
     return uuid.uuid4().hex
 
 
+def add_record_to_shortcuts(url, shortcut_id):
+    new_item = Shortcuts(url=url, shortcut_id=shortcut_id, session_id=g.session_id)
+    db.session.add(new_item)
+    db.session.commit()
+
+
 def push_message(message, type='primary'):
     types = {
         'primary': 'PRIMARY: ',
@@ -70,15 +78,22 @@ def load_session_id():
 def index():
     if request.method == 'POST':
         url = request.form.get('url')
+        custom_id = request.form.get('custom')
+        custom_on = request.form.get('custom_on')
 
         if not url:
-            push_message('URL must be filled', type='error')
+            push_message('URL must be filled.', type='primary')
+        elif custom_on and not custom_id:
+            push_message('Input custom shortcut ID or disable the checkbox.', type='primary')     
         else:
-            shortcut_id = generate_shortcut_id()
-            new_item = Shortcuts(url=url, shortcut_id=shortcut_id, session_id=g.session_id)
-            db.session.add(new_item)
-            db.session.commit()
-            push_message('Shortcut created', type='success')
+            shortcut_id = custom_id if custom_on else generate_shortcut_id()
+            try:
+                add_record_to_shortcuts(url, shortcut_id)
+                push_message('Shortcut created.', type='success')
+            except IntegrityError:
+                db.session.rollback()
+                push_message('Shortcut ID is already taken, please try again.', type='error')
+
             
     shortcuts = Shortcuts.query.filter_by(session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
     shortcuts = [request.host_url + sh.shortcut_id for sh in shortcuts]

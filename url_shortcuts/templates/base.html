@@ -1,44 +1,47 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre.min.css') }}"/>
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre-icons.min.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre-exp.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre-icons.min.css') }}" />
     <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <title>Welcome to Url Shortcuts</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="container">
-      <header class="navbar">
-        <section class="navbar-section">
-          <a href="{{ url_for('index') }}" class="navbar-brand text-bold mr-2">Url Shortcuts</a>
-          <a href="{{ url_for('clear') }}" class="btn btn-link">Clear</a>
-        </section>
-        
-        <section class="navbar-section">
-          <div class="input-group input-inline">
-            <a href="https://github.com/silentmode0n/url_shortcuts" class="btn btn-link">GitHub</a>
-            <!-- Comming soon
+        <header class="navbar">
+            <section class="navbar-section">
+                <a href="{{ url_for('index') }}" class="navbar-brand text-bold mr-2">Url Shortcuts</a>
+                <a href="{{ url_for('clear') }}" class="btn btn-link">Clear</a>
+            </section>
+
+            <section class="navbar-section">
+                <div class="input-group input-inline">
+                    <a href="https://github.com/silentmode0n/url_shortcuts" class="btn btn-link">GitHub</a>
+                    <!-- Comming soon
             <input class="form-input" type="text" placeholder="search">
             <button class="btn btn-primary input-group-btn">Search</button>
             -->
-          </div>
-        </section>
-      </header>
-      <div class="column  col-6 col-mx-auto">
-          {% for message in get_flashed_messages() %}
-            {% if message.split(':')[0] == 'SUCCESS' %}  
-              <div class="toast toast-success">{{ message }}</div>
+                </div>
+            </section>
+        </header>
+        <div class="column  col-6 col-mx-auto">
+            {% for message in get_flashed_messages() %} {% if message.split(':')[0] == 'SUCCESS' %}
+            <div class="toast toast-success">{{ message }}</div>
             {% elif message.split(':')[0] == 'ERROR' %}
-              <div class="toast toast-error">{{ message }}</div>
+            <div class="toast toast-error">{{ message }}</div>
             {% else %}
-            <div class="toast toast-primary">{{ message }}</div>
-            {% endif %}
-          {% endfor %}
-      </div>
-          {% block content %} {% endblock %}
+            <div class="toast toast-worning">{{ message }}</div>
+            {% endif %} {% endfor %}
+        </div>
+        {% block content %} {% endblock %}
     </div>
-  </body>
+    <script src="{{ url_for('static', filename='js/actions.js') }}"></script>
+</body>
+
 </html>

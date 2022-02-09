@@ -1,29 +1,39 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <div class="column col-6 col-mx-auto">
-        <div class="column">
-            <form method="post" action="{{ url_for('index') }}">
-                <div class="form-group">
-                    <label class="form-label" for="input-url">Url</label>
-                    <input class="form-input" type="text" name="url" id="input-url" placeholder="Enter original URL" autofocus>
-                </div>
-                <div class="row">
-                    <button class="btn btn-primary" type="submit" name="action">Shorten<i class="icon icon-arrow-right"></i></button>
-                </div>
-            </form>
-        </div>
-        <br>
-        {% if shortcuts %}
-        <div class="column">
-            {% for shortcut in shortcuts %}
-            <div class="column">
-                <div class="chip">
-                    <a href="{{ shortcut }}" target="_blank" role="button">{{ shortcut }}</a>
-                </div>
+{% extends 'base.html' %} {% block content %}
+<div class="column col-6 col-mx-auto">
+    <div class="column">
+        <form method="post" action="{{ url_for('index') }}">
+            <div class="form-group">
+                <label class="form-label" for="input-url">
+                        Url
+                    </label>
+                <input class="form-input" type="text" name="url" id="input-url" placeholder="https://your-loooong-url.com" value="{{ request.form['url'] }}" autofocus>
+                <label class="form-switch">
+                        <input 
+                            type="checkbox" 
+                            name="custom_on" 
+                            id="custom_on"
+                            onclick="hideCustomId()"
+                            {{ 'checked' if request.form['custom_on'] else '' }}>
+                        <i class="form-icon"></i>
+                        Custom shortcut ID
+                    </label>
+                <input class="form-input" type="text" name="custom" id="custom" placeholder="my-chortcut-id" value="{{ request.form['custom'] }}">
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+            <div class="row">
+                <button class="btn btn-primary" type="submit" name="action">Shorten<i class="icon icon-arrow-right"></i></button>
+            </div>
+        </form>
     </div>
+    <br> {% if shortcuts %}
+    <div class="column">
+        {% for shortcut in shortcuts %}
+        <div class="column">
+            <div class="chip">
+                <a href="{{ shortcut }}" target="_blank" role="button">{{ shortcut }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
