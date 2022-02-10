@@ -9,4 +9,10 @@ function hideCustomId() {
     }
 }
 
+function removeFlash() {
+    var flash = document.getElementById("flash");
+    setTimeout(() => flash.remove(), 3000);
+}
+
 hideCustomId();
+removeFlash();

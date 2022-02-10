@@ -1,4 +1,4 @@
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 
 from flask import Flask, url_for
@@ -11,7 +11,6 @@ from flask import g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.exc import PendingRollbackError
 import uuid
 import os
 
@@ -104,7 +103,6 @@ def index():
 @app.route('/<shortcut_id>')
 def redirect_url(shortcut_id):
     shortcut = Shortcuts.query.filter_by(shortcut_id=shortcut_id).first()
-    print(shortcut) # debug
 
     if shortcut:
         return redirect(shortcut.url)

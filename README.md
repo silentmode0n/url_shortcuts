@@ -23,6 +23,7 @@ Not finished...
 
 ## Versions
 
++ 0.3.1 *autoremove flash messages*
 + 0.3.0 *added manual input shortcut id*
 + 0.2.1 *added flash message types*
 + 0.2.0 *sessions added*

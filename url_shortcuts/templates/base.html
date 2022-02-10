@@ -30,7 +30,7 @@
                 </div>
             </section>
         </header>
-        <div class="column  col-6 col-mx-auto">
+        <div id="flash" class="column  col-6 col-mx-auto">
             {% for message in get_flashed_messages() %} {% if message.split(':')[0] == 'SUCCESS' %}
             <div class="toast toast-success">{{ message }}</div>
             {% elif message.split(':')[0] == 'ERROR' %}
