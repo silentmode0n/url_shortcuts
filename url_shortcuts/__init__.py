@@ -92,6 +92,8 @@ def index():
             except IntegrityError:
                 db.session.rollback()
                 push_message('Shortcut ID is already taken, please try again.', type='error')
+    
+        return redirect(url_for('index'))
 
             
     shortcuts = Shortcuts.query.filter_by(session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
