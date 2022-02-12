@@ -1,4 +1,4 @@
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 
 from flask import Flask, url_for
@@ -51,17 +51,14 @@ def add_record_to_shortcuts(url, shortcut_id, password=None):
     db.session.commit()
 
 
-def push_message(message, type='primary'):
+def push_message(message, type='worning'):
     types = {
-        'primary': 'PRIMARY: ',
-        'success': 'SUCCESS: ',
-        'error': 'ERROR: ',
+        'worning': 'toast toast-worning',
+        'success': 'toast toast-success',
+        'error': 'toast toast-error',
     }
-    if type in types:
-        message = types[type] + message
-    else:
-        message = types['primary'] + message
-    flash(message)
+    category = types[type] if type in types else types['worning']
+    flash(message, category)
 
 
 @app.before_request
@@ -85,11 +82,11 @@ def index():
         password = request.form.get('password')
 
         if not url:
-            push_message('URL must be filled.', type='primary')
+            push_message('URL must be filled.', type='worning')
         elif custom_on and not custom_id:
-            push_message('Input custom shortcut ID or disable the checkbox.', type='primary')
+            push_message('Input custom shortcut ID or disable the checkbox.', type='worning')
         elif password_on and not password:
-            push_message('Input password or disable the checkbox.', type='primary')
+            push_message('Input password or disable the checkbox.', type='worning')
         else:
             shortcut_id = custom_id if custom_on else generate_shortcut_id()
             try:
