@@ -3,10 +3,10 @@
     <div class="column">
         <form method="post" action="{{ url_for('index') }}">
             <div class="form-group">
-                <label class="form-label" for="input-url">
+                <label class="form-label" for="url">
                         Url
                     </label>
-                <input class="form-input" type="text" name="url" id="input-url" placeholder="https://your-loooong-url.com" value="{{ request.form['url'] }}" autofocus>
+                <input class="form-input" type="text" name="url" id="url" placeholder="https://your-loooong-url.com" autofocus>
                 <label class="form-switch">
                         <input 
                             type="checkbox" 
@@ -17,7 +17,18 @@
                         <i class="form-icon"></i>
                         Custom shortcut ID
                     </label>
-                <input class="form-input" type="text" name="custom" id="custom" placeholder="my-chortcut-id" value="{{ request.form['custom'] }}">
+                <input class="form-input" type="text" name="custom" id="custom" placeholder="my-chortcut-id">
+                <label class="form-switch">
+                    <input 
+                        type="checkbox" 
+                        name="password_on" 
+                        id="password_on"
+                        onclick="hidePassword()"
+                        {{ 'checked' if request.form['password_on'] else '' }}>
+                    <i class="form-icon"></i>
+                    Set password
+                </label>
+                <input class="form-input" type="password" name="password" id="password" placeholder="very-secret-password">
             </div>
             <div class="row">
                 <button class="btn btn-primary" type="submit" name="action">Shorten<i class="icon icon-arrow-right"></i></button>
@@ -36,4 +47,5 @@
     </div>
     {% endif %}
 </div>
+<script src="{{ url_for('static', filename='js/actions.js') }}"></script>
 {% endblock %}

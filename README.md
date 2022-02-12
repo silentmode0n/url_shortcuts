@@ -13,7 +13,7 @@ Not finished...
 
 + ~~Sessions~~
 + Login and Profile
-+ Set password on link (*optional*)
++ ~~Set password on link (*optional*)~~
 + ~~Manual input shortcut id~~
 + QR-code for link
 + Statistics on transitions
@@ -23,6 +23,7 @@ Not finished...
 
 ## Versions
 
++ 0.4.0 *set password on link*
 + 0.3.1 *autoremove flash messages*
 + 0.3.0 *added manual input shortcut id*
 + 0.2.1 *added flash message types*

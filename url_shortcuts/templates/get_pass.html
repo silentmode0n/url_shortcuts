@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<div class="column col-6 col-mx-auto">
+    <div class="column">
+        <form method="post" action="">
+            <div class="form-group">
+                <label class="form-label" for="password">
+                        Password
+                    </label>
+                <input class="form-input" type="password" name="password" id="password" placeholder="enter-your-password" autofocus>
+            </div>
+            <div class="row">
+                <button class="btn btn-primary" type="submit" name="action">Go<i class="icon icon-arrow-right"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
