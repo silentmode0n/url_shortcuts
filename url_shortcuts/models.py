@@ -10,7 +10,7 @@ class Shortcuts(db.Model):
     shortcut_id = db.Column(db.String(80), unique=True, nullable=False)
     url = db.Column(db.String(500), nullable=False)
     created = db.Column(db.DateTime(), default=datetime.now, nullable=False)
-    session_id = db.Column(db.String(40), unique=True)
+    session_id = db.Column(db.String(40), unique=False)
     password_hash = db.Column(db.String(128))
 
     def __repr__(self):
