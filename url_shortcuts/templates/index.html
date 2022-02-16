@@ -6,7 +6,7 @@
                 <label class="form-label" for="url">
                         Url
                     </label>
-                <input class="form-input" type="text" name="url" id="url" placeholder="https://your-loooong-url.com" autofocus>
+                <input class="form-input" type="text" name="url" id="url" placeholder="https://your-loooong-url.com" value="{{ request.form.get('url', '') }}" autofocus>
                 <label class="form-switch">
                         <input 
                             type="checkbox" 
@@ -17,7 +17,7 @@
                         <i class="form-icon"></i>
                         Custom shortcut ID
                     </label>
-                <input class="form-input" type="text" name="custom" id="custom" placeholder="my-chortcut-id">
+                <input class="form-input" type="text" name="custom" id="custom" placeholder="my-chortcut-id" value="{{ request.form.get('custom', '') }}">
                 <label class="form-switch">
                     <input 
                         type="checkbox" 
@@ -40,7 +40,14 @@
         {% for shortcut in shortcuts %}
         <div class="column">
             <div class="chip">
-                <a href="{{ shortcut }}" target="_blank" role="button">{{ shortcut }}</a>
+                <a href="{{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
+                    {{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}
+                </a>
+            </div>
+            <div class="chip">
+                <a href="{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
+                    QR
+                </a>
             </div>
         </div>
         {% endfor %}

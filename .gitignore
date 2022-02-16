@@ -2,3 +2,4 @@
 *__pycache__*
 shortcuts.db
 token_for_git.txt
+*.http

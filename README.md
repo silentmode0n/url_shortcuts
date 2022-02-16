@@ -14,19 +14,20 @@ Not finished...
 ## Coming soon
 ----
 
-+ ~~Sessions~~
-+ Login and Profile
-+ ~~Set password on link (*optional*)~~
-+ ~~Manual input shortcut id~~
-+ QR-code for link
-+ Statistics on transitions
-+ Title for link
-+ Hashing links for guests
-+ API
+- [x] Sessions
+- [ ] Login and Profile
+- [x] Set password on link (*optional*)
+- [x] Manual input shortcut id
+- [x] QR-code for link
+- [ ] Statistics on transitions
+- [ ] Title for link
+- [ ] Hashing links for guests
+- [ ] API
 
 ## Versions
 ----
 
++ 0.5.0 *added QR-codes for links*
 + 0.4.1 *fix flash messages with categories*
 + 0.4.0 *set password on link*
 + 0.3.1 *autoremove flash messages*

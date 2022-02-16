@@ -1,18 +1,23 @@
-__version__ = '0.4.1'
+__version__ = '0.5.0'
+__author__ = 'silentmode0n'
 
 
-from flask import Flask, url_for
+from flask import Flask
+from flask import url_for
 from flask import render_template
 from flask import request
 from flask import flash
 from flask import redirect
 from flask import session
 from flask import g
+from flask import send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 import uuid
 import os
+import io
+import qrcode
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
@@ -61,9 +66,18 @@ def push_message(message, type='worning'):
     flash(message, category)
 
 
+def get_qr_file_buffer(data):
+    qr = qrcode.QRCode()
+    qr.add_data(data)
+    buf = io.BytesIO()
+    qr.make_image().save(buf, format='JPEG')
+    buf.seek(0)
+    return buf
+
+
 @app.before_request
 def load_session_id():
-    session_id = session.get("session_id")
+    session_id = session.get("session_id", None)
 
     if session_id:
         g.session_id = session_id
@@ -100,7 +114,8 @@ def index():
 
             
     shortcuts = Shortcuts.query.filter_by(session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
-    shortcuts = [request.host_url + sh.shortcut_id for sh in shortcuts]
+    # shortcuts = [url_for('redirect_url', shortcut_id=sh.shortcut_id, _external=True) for sh in shortcuts]
+    # shortcuts = [request.host_url + sh.shortcut_id for sh in shortcuts]
 
     return render_template('index.html', shortcuts=shortcuts)
 
@@ -133,3 +148,28 @@ def clear():
     if session['session_id']:
         del session['session_id']
     return redirect(url_for('index'))
+
+
+@app.route('/qr/<shortcut_id>', methods=['GET', 'POST'])
+def get_qr(shortcut_id):
+    shortcut = Shortcuts.query.filter_by(shortcut_id=shortcut_id).first()
+    if not shortcut:
+        push_message('Invalid link', type='error')
+        return redirect(url_for('index'))
+
+    elif request.method == 'POST':
+        password = request.form.get('password')
+        
+        if not shortcut.check_password(password):
+            push_message('Invalid password', type='error')
+            return redirect(url_for('get_qr', shortcut_id=shortcut_id))
+
+    elif shortcut.password_hash:
+        return render_template('get_pass.html')
+
+    buf = get_qr_file_buffer(shortcut.url)
+    return send_file(
+        buf,
+        download_name=f'{shortcut_id}.jpg',
+        mimetype='image/jpeg',
+    )
