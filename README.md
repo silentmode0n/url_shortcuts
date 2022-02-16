@@ -1,18 +1,16 @@
 # url_shortcuts - shortener for urls
+----
 
 ## What is it
-----
 
 It's my first project with Flask framework.
 A simple web app that creates shortcuts for long urls.
 
 ## Status
-----
 
 Not finished...
 
 ## Coming soon
-----
 
 - [x] Sessions
 - [ ] Login and Profile
@@ -25,7 +23,6 @@ Not finished...
 - [ ] API
 
 ## Versions
-----
 
 + 0.5.0 *added QR-codes for links*
 + 0.4.1 *fix flash messages with categories*
