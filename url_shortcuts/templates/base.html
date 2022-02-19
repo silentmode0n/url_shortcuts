@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <!--Import materialize.css-->
+    <!--Import css-->
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre-exp.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/spectre-icons.min.css') }}" />
@@ -37,6 +37,7 @@
         </div>
         {% block content %} {% endblock %}
     </div>
+    <script src="{{ url_for('static', filename='js/actions.js') }}"></script>
 </body>
 
 </html>

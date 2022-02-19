@@ -25,6 +25,6 @@ function removeFlash() {
     setTimeout(() => flash.remove(), 4000);
 }
 
+removeFlash();
 hideCustomId();
 hidePassword();
-removeFlash();

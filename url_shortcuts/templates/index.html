@@ -1,23 +1,37 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block content %}
 <div class="column col-6 col-mx-auto">
     <div class="column">
         <form method="post" action="{{ url_for('index') }}">
             <div class="form-group">
                 <label class="form-label" for="url">
                         Url
-                    </label>
-                <input class="form-input" type="text" name="url" id="url" placeholder="https://your-loooong-url.com" value="{{ request.form.get('url', '') }}" autofocus>
+                </label>
+                <input 
+                    class="form-input"
+                    type="text" 
+                    name="url" 
+                    id="url" 
+                    placeholder="https://your-loooong-url.com" 
+                    value="{{ request.form.get('url', '') }}" 
+                    autofocus>
                 <label class="form-switch">
-                        <input 
-                            type="checkbox" 
-                            name="custom_on" 
-                            id="custom_on"
-                            onclick="hideCustomId()"
-                            {{ 'checked' if request.form['custom_on'] else '' }}>
-                        <i class="form-icon"></i>
-                        Custom shortcut ID
-                    </label>
-                <input class="form-input" type="text" name="custom" id="custom" placeholder="my-chortcut-id" value="{{ request.form.get('custom', '') }}">
+                    <input 
+                        type="checkbox" 
+                        name="custom_on" 
+                        id="custom_on"
+                        onclick="hideCustomId()"
+                        {{ 'checked' if request.form['custom_on'] else '' }}>
+                    <i class="form-icon"></i>
+                    Custom shortcut ID
+                </label>
+                <input 
+                    class="form-input" 
+                    type="text" 
+                    name="custom" 
+                    id="custom" 
+                    placeholder="my-chortcut-id" 
+                    value="{{ request.form.get('custom', '') }}">
                 <label class="form-switch">
                     <input 
                         type="checkbox" 
@@ -28,10 +42,21 @@
                     <i class="form-icon"></i>
                     Set password
                 </label>
-                <input class="form-input" type="password" name="password" id="password" placeholder="very-secret-password">
+                <input 
+                    class="form-input" 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    placeholder="very-secret-password">
             </div>
             <div class="row">
-                <button class="btn btn-primary" type="submit" name="action">Shorten<i class="icon icon-arrow-right"></i></button>
+                <button 
+                    class="btn btn-primary" 
+                    type="submit" 
+                    name="action">
+                    Shorten
+                    <i class="icon icon-arrow-right"></i>
+                </button>
             </div>
         </form>
     </div>
@@ -54,5 +79,4 @@
     </div>
     {% endif %}
 </div>
-<script src="{{ url_for('static', filename='js/actions.js') }}"></script>
 {% endblock %}
