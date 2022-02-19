@@ -2,6 +2,12 @@ __version__ = '0.5.0'
 __author__ = 'silentmode0n'
 
 
+import functools
+import uuid
+import os
+import io
+import qrcode
+
 from flask import Flask
 from flask import url_for
 from flask import render_template
@@ -11,13 +17,10 @@ from flask import redirect
 from flask import session
 from flask import g
 from flask import send_file
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
-import uuid
-import os
-import io
-import qrcode
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
@@ -33,7 +36,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CSRF_ENABLED'] = True
 
-db  = SQLAlchemy(app)
+db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
@@ -48,8 +51,44 @@ def generate_session_id():
     return uuid.uuid4().hex
 
 
+def check_link(view):
+
+    @functools.wraps(view)
+    def wrapped(shortcut_id):
+        shortcut = Shortcuts.query.filter_by(shortcut_id=shortcut_id).first()
+        if not shortcut:
+            push_message('Invalid link', type='error')
+            return redirect(url_for('index'))
+        g.shortcut = shortcut
+        return view(shortcut_id)
+
+    return wrapped
+
+
+def check_link_pass(view):
+
+    @functools.wraps(view)
+    def wrapped(shortcut_id):
+        if request.method == 'POST':
+            password = request.form.get('password')
+
+            if not g.shortcut.check_password(password):
+                push_message('Invalid password', type='error')
+                return redirect(url_for(view.__name__, shortcut_id=shortcut_id))
+
+        elif g.shortcut.password_hash:
+            return render_template('get_pass.html')
+
+        return view(shortcut_id)
+
+    return wrapped
+
+
 def add_record_to_shortcuts(url, shortcut_id, password=None):
-    new_item = Shortcuts(url=url, shortcut_id=shortcut_id, session_id=g.session_id)
+    new_item = Shortcuts(
+        url=url,
+        shortcut_id=shortcut_id,
+        session_id=g.session_id)
     if password:
         new_item.set_password(password)
     db.session.add(new_item)
@@ -98,9 +137,13 @@ def index():
         if not url:
             push_message('URL must be filled.', type='worning')
         elif custom_on and not custom_id:
-            push_message('Input custom shortcut ID or disable the checkbox.', type='worning')
+            push_message(
+                'Input custom shortcut ID or disable the checkbox.',
+                type='worning')
         elif password_on and not password:
-            push_message('Input password or disable the checkbox.', type='worning')
+            push_message(
+                'Input password or disable the checkbox.',
+                type='worning')
         else:
             shortcut_id = custom_id if custom_on else generate_shortcut_id()
             try:
@@ -108,68 +151,38 @@ def index():
                 push_message('Shortcut created.', type='success')
             except IntegrityError:
                 db.session.rollback()
-                push_message('Shortcut ID is already taken, please try again.', type='error')
-    
+                push_message(
+                    'Shortcut ID is already taken, please try again.',
+                    type='error')
+
         return redirect(url_for('index'))
 
-            
-    shortcuts = Shortcuts.query.filter_by(session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
-    # shortcuts = [url_for('redirect_url', shortcut_id=sh.shortcut_id, _external=True) for sh in shortcuts]
-    # shortcuts = [request.host_url + sh.shortcut_id for sh in shortcuts]
+    shortcuts = Shortcuts.query.filter_by(
+        session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
 
     return render_template('index.html', shortcuts=shortcuts)
 
 
 @app.route('/<shortcut_id>', methods=['GET', 'POST'])
+@check_link
+@check_link_pass
 def redirect_url(shortcut_id):
-    shortcut = Shortcuts.query.filter_by(shortcut_id=shortcut_id).first()
-
-    if not shortcut:
-            push_message('Invalid link', type='error')
-            return redirect(url_for('index'))
-    
-    elif request.method == 'POST':
-        password = request.form.get('password')
-        
-        if shortcut.check_password(password):
-            return redirect(shortcut.url)
-        else:
-            push_message('Invalid password', type='error')
-            return redirect(url_for('redirect_url', shortcut_id=shortcut_id))
-
-    elif shortcut.password_hash:
-        return render_template('get_pass.html')
-
-    return redirect(shortcut.url)
+    return redirect(g.shortcut.url)
 
 
 @app.route('/clear')
 def clear():
-    if session['session_id']:
+    if session.get('session_id'):
         del session['session_id']
     return redirect(url_for('index'))
 
 
 @app.route('/qr/<shortcut_id>', methods=['GET', 'POST'])
+@check_link
+@check_link_pass
 def get_qr(shortcut_id):
-    shortcut = Shortcuts.query.filter_by(shortcut_id=shortcut_id).first()
-    if not shortcut:
-        push_message('Invalid link', type='error')
-        return redirect(url_for('index'))
-
-    elif request.method == 'POST':
-        password = request.form.get('password')
-        
-        if not shortcut.check_password(password):
-            push_message('Invalid password', type='error')
-            return redirect(url_for('get_qr', shortcut_id=shortcut_id))
-
-    elif shortcut.password_hash:
-        return render_template('get_pass.html')
-
-    buf = get_qr_file_buffer(shortcut.url)
     return send_file(
-        buf,
+        get_qr_file_buffer(g.shortcut.url),
         download_name=f'{shortcut_id}.jpg',
         mimetype='image/jpeg',
     )

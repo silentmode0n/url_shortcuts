@@ -1,4 +1,3 @@
-from enum import unique
 from url_shortcuts import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash
@@ -21,4 +20,3 @@ class Shortcuts(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
