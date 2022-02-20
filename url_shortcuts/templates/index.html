@@ -60,22 +60,37 @@
             </div>
         </form>
     </div>
-    <br> {% if shortcuts %}
+    <br> 
+    {% if shortcuts %}
     <div class="column">
-        {% for shortcut in shortcuts %}
-        <div class="column">
-            <div class="chip">
-                <a href="{{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
-                    {{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}
-                </a>
-            </div>
-            <div class="chip">
-                <a href="{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
-                    QR
-                </a>
-            </div>
-        </div>
-        {% endfor %}
+        <table class="table">
+            <head>
+                <tr>
+                    <th>Link</th>
+                    <th>QR-code</th>
+                    <th>Created</th>
+                </tr>
+            </head>
+            <tbody>
+                {% for shortcut in shortcuts %}
+                    <tr class="active">
+                        <th>
+                            <a href="{{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
+                                {{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
+                                QR
+                            </a>
+                        </th>
+                        <th>
+                            {{ shortcut.created | datetime }}
+                        </th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     {% endif %}
 </div>

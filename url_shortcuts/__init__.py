@@ -1,4 +1,4 @@
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 __author__ = 'silentmode0n'
 
 
@@ -112,6 +112,12 @@ def get_qr_file_buffer(data):
     qr.make_image().save(buf, format='JPEG')
     buf.seek(0)
     return buf
+
+
+@app.template_filter('datetime')
+def _jinja2_filter_datetime(date, format=None):
+    format = format if format else '%d.%m.%Y %H:%M:%S'
+    return date.strftime(format)
 
 
 @app.before_request
