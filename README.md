@@ -12,6 +12,7 @@ Not finished...
 
 ## Coming soon
 
+- [ ] show logo before redirecting for link
 - [x] Sessions
 - [ ] Login and Profile
 - [x] Set password on link (*optional*)
