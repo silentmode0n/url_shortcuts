@@ -24,6 +24,7 @@ Not finished...
 
 ## Versions
 
++ 0.5.2 *fix bug with request pass for qrcode link*
 + 0.5.1 *added a table to display a list of shortcuts*
 + 0.5.0 *added QR-codes for links*
 + 0.4.1 *fix flash messages with categories*

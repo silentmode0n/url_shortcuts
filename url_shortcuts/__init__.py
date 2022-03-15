@@ -1,4 +1,4 @@
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 __author__ = 'silentmode0n'
 
 
@@ -140,17 +140,22 @@ def index():
         password_on = request.form.get('password_on')
         password = request.form.get('password')
 
+        errors = False
+
         if not url:
+            errors = True
             push_message('URL must be filled.', type='worning')
-        elif custom_on and not custom_id:
+        if custom_on and not custom_id:
+            errors = True
             push_message(
                 'Input custom shortcut ID or disable the checkbox.',
                 type='worning')
-        elif password_on and not password:
+        if password_on and not password:
+            errors = True
             push_message(
                 'Input password or disable the checkbox.',
                 type='worning')
-        else:
+        if not errors:
             shortcut_id = custom_id if custom_on else generate_shortcut_id()
             try:
                 add_record_to_shortcuts(url, shortcut_id, password)
@@ -185,10 +190,9 @@ def clear():
 
 @app.route('/qr/<shortcut_id>', methods=['GET', 'POST'])
 @check_link
-@check_link_pass
 def get_qr(shortcut_id):
     return send_file(
-        get_qr_file_buffer(g.shortcut.url),
+        get_qr_file_buffer(url_for('redirect_url', shortcut_id=shortcut_id, _external=True)),
         download_name=f'{shortcut_id}.jpg',
         mimetype='image/jpeg',
     )
