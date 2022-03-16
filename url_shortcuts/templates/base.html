@@ -13,11 +13,13 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container grid-md">
+        
+        {% block navbar %}
         <header class="navbar">
             <section class="navbar-section">
                 <a href="{{ url_for('index') }}" class="navbar-brand text-bold mr-2">Url Shortcuts</a>
-                <a href="{{ url_for('clear') }}" class="btn btn-link">Clear</a>
+                <a href="{{ url_for('clear') }}" class="btn btn-link">Clear</a> <!-- TODO set visibility clear button-->
             </section>
 
             <section class="navbar-section">
@@ -30,14 +32,18 @@
                 </div>
             </section>
         </header>
-        <div id="flash" class="column  col-6 col-mx-auto">
+        {% endblock %}
+
+        <div id="flash" class="column">
             {% for category, message in get_flashed_messages(with_categories=True) %}
             <div class="{{ category }}">{{ message }}</div>
             {% endfor %}
         </div>
+
         {% block content %} {% endblock %}
+
     </div>
-    <script src="{{ url_for('static', filename='js/actions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
 </body>
 
 </html>

@@ -20,11 +20,5 @@ function hidePassword() {
     }
 }
 
-function removeFlash() {
-    var flash = document.getElementById("flash");
-    setTimeout(() => flash.remove(), 4000);
-}
-
-removeFlash();
 hideCustomId();
 hidePassword();

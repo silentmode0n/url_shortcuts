@@ -1,4 +1,4 @@
-__version__ = '0.5.2'
+__version__ = '0.6.0'
 __author__ = 'silentmode0n'
 
 
@@ -178,7 +178,8 @@ def index():
 @check_link
 @check_link_pass
 def redirect_url(shortcut_id):
-    return redirect(g.shortcut.url)
+    #return redirect(g.shortcut.url)
+    return render_template('redirect.html', link=g.shortcut.url)
 
 
 @app.route('/clear')

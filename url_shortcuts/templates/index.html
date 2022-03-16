@@ -1,6 +1,5 @@
 {% extends 'base.html' %} 
 {% block content %}
-<div class="column col-6 col-mx-auto">
     <div class="column">
         <form method="post" action="{{ url_for('index') }}">
             <div class="form-group">
@@ -93,5 +92,5 @@
         </table>
     </div>
     {% endif %}
-</div>
+    <script src="{{ url_for('static', filename='js/checkboxhide.js') }}"></script>
 {% endblock %}
