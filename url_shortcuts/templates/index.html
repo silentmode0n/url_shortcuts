@@ -4,14 +4,14 @@
         <form method="post" action="{{ url_for('index') }}">
             <div class="form-group">
                 <label class="form-label" for="url">
-                        Url
+                        Ссылка
                 </label>
                 <input 
                     class="form-input"
                     type="text" 
                     name="url" 
                     id="url" 
-                    placeholder="https://your-loooong-url.com" 
+                    placeholder="https://длинная-длинная-ссылка.ru" 
                     value="{{ request.form.get('url', '') }}" 
                     autofocus>
                 <label class="form-switch">
@@ -22,14 +22,14 @@
                         onclick="hideCustomId()"
                         {{ 'checked' if request.form['custom_on'] else '' }}>
                     <i class="form-icon"></i>
-                    Custom shortcut ID
+                    Указать имя ярлыка
                 </label>
                 <input 
                     class="form-input" 
                     type="text" 
                     name="custom" 
                     id="custom" 
-                    placeholder="your-chortcut-id" 
+                    placeholder="введите желаемое имя ярлыка"
                     value="{{ request.form.get('custom', '') }}">
                 <label class="form-switch">
                     <input 
@@ -39,22 +39,21 @@
                         onclick="hidePassword()"
                         {{ 'checked' if request.form['password_on'] else '' }}>
                     <i class="form-icon"></i>
-                    Set password
+                    Установить пароль
                 </label>
                 <input 
                     class="form-input" 
                     type="password" 
                     name="password" 
                     id="password" 
-                    placeholder="very-secret-password">
+                    placeholder="введите пароль">
             </div>
             <div class="row">
                 <button 
                     class="btn btn-primary" 
                     type="submit" 
                     name="action">
-                    Shorten
-                    <i class="icon icon-arrow-right"></i>
+                    Сократить
                 </button>
             </div>
         </form>
@@ -65,9 +64,9 @@
         <table class="table">
             <head>
                 <tr>
-                    <th>Link</th>
-                    <th>QR-code</th>
-                    <th>Created</th>
+                    <th>Ярлык</th>
+                    <th>QR-код</th>
+                    <th>Создан</th>
                 </tr>
             </head>
             <tbody>

@@ -25,6 +25,7 @@ Not finished...
 
 ## Versions
 
++ 0.6.2 *changed language pages to rus*
 + 0.6.1 *added page 404*
 + 0.6.0 *added a show logo before redirecting for link*
 + 0.5.2 *fix bug with request pass for qrcode link*

@@ -1,4 +1,4 @@
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 __author__ = 'silentmode0n'
 
 
@@ -73,7 +73,7 @@ def check_link_pass(view):
             password = request.form.get('password')
 
             if not g.shortcut.check_password(password):
-                push_message('Invalid password', type='error')
+                push_message('Пароль не верный!', type='error')
                 return redirect(url_for(view.__name__, shortcut_id=shortcut_id))
 
         elif g.shortcut.password_hash:
@@ -144,27 +144,27 @@ def index():
 
         if not url:
             errors = True
-            push_message('URL must be filled.', type='worning')
+            push_message('Укажите адрес ссылки.', type='worning')
         if custom_on and not custom_id:
             errors = True
             push_message(
-                'Input custom shortcut ID or disable the checkbox.',
+                'Введите желаемое имя ярлыка или отключите переключатель.',
                 type='worning')
         if password_on and not password:
             errors = True
             push_message(
-                'Input password or disable the checkbox.',
+                'Введите пароль или отключите переключатель.',
                 type='worning')
         if not errors:
             shortcut_id = custom_id if custom_on else generate_shortcut_id()
             try:
                 add_record_to_shortcuts(url, shortcut_id, password)
-                push_message('Shortcut created.', type='success')
+                push_message('Ярлык успешно создан. Можете поделить им.', type='success')
                 return redirect(url_for('index'))
             except IntegrityError:
                 db.session.rollback()
                 push_message(
-                    'Shortcut ID is already taken, please try again.',
+                    'Имя ярлыка должно быть уникальным. Попробуйте снова.',
                     type='error')
 
 
