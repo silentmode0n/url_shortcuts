@@ -29,7 +29,7 @@
                     type="text" 
                     name="custom" 
                     id="custom" 
-                    placeholder="my-chortcut-id" 
+                    placeholder="your-chortcut-id" 
                     value="{{ request.form.get('custom', '') }}">
                 <label class="form-switch">
                     <input 
@@ -80,7 +80,7 @@
                         </th>
                         <th>
                             <a href="{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
-                                QR
+                                <i class="icon icon-share"></i>
                             </a>
                         </th>
                         <th>

@@ -1,4 +1,4 @@
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 __author__ = 'silentmode0n'
 
 
@@ -17,6 +17,7 @@ from flask import redirect
 from flask import session
 from flask import g
 from flask import send_file
+from flask import abort
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -57,8 +58,7 @@ def check_link(view):
     def wrapped(shortcut_id):
         shortcut = Shortcuts.query.filter_by(shortcut_id=shortcut_id).first()
         if not shortcut:
-            push_message('Invalid link', type='error')
-            return redirect(url_for('index'))
+            abort(404)
         g.shortcut = shortcut
         return view(shortcut_id)
 
@@ -160,13 +160,13 @@ def index():
             try:
                 add_record_to_shortcuts(url, shortcut_id, password)
                 push_message('Shortcut created.', type='success')
+                return redirect(url_for('index'))
             except IntegrityError:
                 db.session.rollback()
                 push_message(
                     'Shortcut ID is already taken, please try again.',
                     type='error')
 
-        return redirect(url_for('index'))
 
     shortcuts = Shortcuts.query.filter_by(
         session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
@@ -189,7 +189,7 @@ def clear():
     return redirect(url_for('index'))
 
 
-@app.route('/qr/<shortcut_id>', methods=['GET', 'POST'])
+@app.route('/qr/<shortcut_id>')
 @check_link
 def get_qr(shortcut_id):
     return send_file(
@@ -197,3 +197,8 @@ def get_qr(shortcut_id):
         download_name=f'{shortcut_id}.jpg',
         mimetype='image/jpeg',
     )
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

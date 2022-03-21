@@ -20,11 +20,12 @@ Not finished...
 - [x] QR-code for link
 - [ ] Statistics on transitions
 - [ ] Title for link
-- [ ] Hashing links for guests
+- [ ] Сaсhing links for guests
 - [ ] API
 
 ## Versions
 
++ 0.6.1 *added page 404*
 + 0.6.0 *added a show logo before redirecting for link*
 + 0.5.2 *fix bug with request pass for qrcode link*
 + 0.5.1 *added a table to display a list of shortcuts*
