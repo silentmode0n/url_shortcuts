@@ -10,6 +10,10 @@ A simple web app that creates shortcuts for long urls.
 
 Not finished...
 
+## CSS
+
+For frontend i use [Spectre.css](https://github.com/picturepan2/spectre) - A Lightweight, Responsive and Modern CSS Framework. Thanks to this team for their work!
+
 ## Coming soon
 
 - [x] show logo before redirecting for link
@@ -25,6 +29,7 @@ Not finished...
 
 ## Versions
 
++ 0.6.3 *add Flask-Forms and CSRF protection*
 + 0.6.2 *changed language pages to rus*
 + 0.6.1 *added page 404*
 + 0.6.0 *added a show logo before redirecting for link*

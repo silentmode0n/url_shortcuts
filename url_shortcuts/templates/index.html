@@ -3,6 +3,7 @@
     <div class="column">
         <form method="post" action="{{ url_for('index') }}">
             <div class="form-group">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <label class="form-label" for="url">
                         Ссылка
                 </label>
@@ -16,11 +17,11 @@
                     autofocus>
                 <label class="form-switch">
                     <input 
-                        type="checkbox" 
-                        name="custom_on" 
-                        id="custom_on"
-                        onclick="hideCustomId()"
-                        {{ 'checked' if request.form['custom_on'] else '' }}>
+                    type="checkbox" 
+                    name="custom_on" 
+                    id="custom_on"
+                    onclick="hideCustomId()"
+                    {{ 'checked' if request.form['custom_on'] else '' }}>
                     <i class="form-icon"></i>
                     Указать имя ярлыка
                 </label>
@@ -48,7 +49,7 @@
                     id="password" 
                     placeholder="введите пароль">
             </div>
-            <div class="row">
+            <div class="form-group">
                 <button 
                     class="btn btn-primary" 
                     type="submit" 

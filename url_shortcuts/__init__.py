@@ -1,4 +1,4 @@
-__version__ = '0.6.2'
+__version__ = '0.6.3'
 __author__ = 'silentmode0n'
 
 
@@ -21,6 +21,7 @@ from flask import abort
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_wtf import CSRFProtect
 from sqlalchemy.exc import IntegrityError
 
 
@@ -39,9 +40,10 @@ app.config['CSRF_ENABLED'] = True
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
+csrf = CSRFProtect(app)
 
 from url_shortcuts.models import Shortcuts
+from url_shortcuts.forms import PasswordForm
 
 
 def generate_shortcut_id():
@@ -60,25 +62,6 @@ def check_link(view):
         if not shortcut:
             abort(404)
         g.shortcut = shortcut
-        return view(shortcut_id)
-
-    return wrapped
-
-
-def check_link_pass(view):
-
-    @functools.wraps(view)
-    def wrapped(shortcut_id):
-        if request.method == 'POST':
-            password = request.form.get('password')
-
-            if not g.shortcut.check_password(password):
-                push_message('Пароль не верный!', type='error')
-                return redirect(url_for(view.__name__, shortcut_id=shortcut_id))
-
-        elif g.shortcut.password_hash:
-            return render_template('get_pass.html')
-
         return view(shortcut_id)
 
     return wrapped
@@ -176,10 +159,18 @@ def index():
 
 @app.route('/<shortcut_id>', methods=['GET', 'POST'])
 @check_link
-@check_link_pass
 def redirect_url(shortcut_id):
-    #return redirect(g.shortcut.url)
-    return render_template('redirect.html', link=g.shortcut.url)
+    if not g.shortcut.password_hash:
+            return render_template('redirect.html', link=g.shortcut.url)
+            
+    form = PasswordForm()
+    if form.validate_on_submit():
+        password = form.password.data
+        if g.shortcut.check_password(password):
+            return render_template('redirect.html', link=g.shortcut.url)
+        push_message('Пароль не верный!', type='error')
+
+    return render_template('get_pass.html', form=form)
 
 
 @app.route('/clear')
