@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash
 class Shortcuts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     shortcut_id = db.Column(db.String(80), unique=True, nullable=False)
-    url = db.Column(db.String(500), nullable=False)
+    url = db.Column(db.String(1000), nullable=False)
     created = db.Column(db.DateTime(), default=datetime.now, nullable=False)
     session_id = db.Column(db.String(40), unique=False)
     password_hash = db.Column(db.String(128))

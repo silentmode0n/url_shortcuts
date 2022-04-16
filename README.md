@@ -29,6 +29,7 @@ For frontend i use [Spectre.css](https://github.com/picturepan2/spectre) - A Lig
 
 ## Versions
 
++ 0.6.4 *in model Shortcuts.url increase from 500 to 1000 characters*
 + 0.6.3 *add Flask-Forms and CSRF protection*
 + 0.6.2 *changed language pages to rus*
 + 0.6.1 *added page 404*
