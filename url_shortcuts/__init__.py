@@ -2,6 +2,7 @@ __version__ = '0.6.4'
 __author__ = 'silentmode0n'
 
 
+from crypt import methods
 import functools
 import uuid
 import os
@@ -19,10 +20,17 @@ from flask import g
 from flask import send_file
 from flask import abort
 
+from werkzeug.urls import url_parse
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 from sqlalchemy.exc import IntegrityError
+from flask_login import LoginManager
+from flask_login import current_user
+from flask_login import login_user
+from flask_login import logout_user
+from flask_login import login_required
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
@@ -41,9 +49,14 @@ app.config['CSRF_ENABLED'] = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 csrf = CSRFProtect(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
 from url_shortcuts.models import Shortcuts
+from url_shortcuts.models import Users
+
 from url_shortcuts.forms import PasswordForm
+from url_shortcuts.forms import LoginForm
 
 
 def generate_shortcut_id():
@@ -97,6 +110,11 @@ def get_qr_file_buffer(data):
     return buf
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+    
+
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, format=None):
     format = format if format else '%d.%m.%Y %H:%M:%S'
@@ -112,6 +130,34 @@ def load_session_id():
     else:
         g.session_id = generate_session_id()
         session['session_id'] = g.session_id
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        user = Users.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            login_user(user)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('index')
+            return redirect(next_page)
+        else:
+            push_message('Почта или пароль не верные!', type='error')
+
+    return render_template('login.html', form=form)     
+    
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -142,7 +188,7 @@ def index():
             shortcut_id = custom_id if custom_on else generate_shortcut_id()
             try:
                 add_record_to_shortcuts(url, shortcut_id, password)
-                push_message('Ярлык успешно создан. Можете поделить им.', type='success')
+                push_message('Ярлык успешно создан. Можете поделиться им.', type='success')
                 return redirect(url_for('index'))
             except IntegrityError:
                 db.session.rollback()

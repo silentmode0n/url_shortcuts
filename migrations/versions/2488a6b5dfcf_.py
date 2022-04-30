@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('shortcuts',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('shortcut_id', sa.String(length=80), nullable=False),
-    sa.Column('url', sa.String(length=500), nullable=False),
+    sa.Column('url', sa.String(length=1000), nullable=False),
     sa.Column('created', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('shortcut_id')

@@ -18,17 +18,22 @@
         {% block navbar %}
         <header class="navbar">
             <section class="navbar-section">
-                <a href="{{ url_for('index') }}" class="navbar-brand text-bold mr-2">Url Shortcuts</a>
+                {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('logout') }}" class="btn btn-link">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-link">Войти</a>
+                {% endif %}
                 <a href="{{ url_for('clear') }}" class="btn btn-link">Очистить</a> <!-- TODO set visibility clear button-->
+            </section>
+
+            <section class="navbar-center">
+                <a href="{{ url_for('index') }}" class="navbar-brand text-bold mr-2">Url Shortcuts</a>
             </section>
 
             <section class="navbar-section">
                 <div class="input-group input-inline">
                     <a href="https://github.com/silentmode0n/url_shortcuts" class="btn btn-link">GitHub</a>
-                    <!-- Comming soon
-            <input class="form-input" type="text" placeholder="search">
-            <button class="btn btn-primary input-group-btn">Search</button>
-            -->
+                    
                 </div>
             </section>
         </header>

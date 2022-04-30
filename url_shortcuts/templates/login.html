@@ -1,0 +1,40 @@
+{% extends 'base.html' %} 
+
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<div class="hero hero-lg">
+    <div class="hero-body">
+        <div class="p-centered  text-center">
+            <span class="text-primary"><a href="{{ url_for('index') }}"><h1><b>Url Shortcuts</b></h1></a></span>
+        </div>
+        <h3>Авторизация</h3>
+        <form method="post" action="" novalidate>
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+
+                {{ form.email.label(class='form-label') }}
+                {% if form.password.errors %}
+                    {{ form.email(class='form-input is-error') }}
+                {% else %}
+                    {{ form.email(class='form-input') }}
+                {% endif %}
+
+                {{ form.password.label(class='form-label') }}
+                {% if form.password.errors %}
+                    {{ form.password(class='form-input is-error') }}
+                    <!-- {% for e in form.password.errors %}
+                        <p class="form-input-hint">{{ e }}</p>
+                    {% endfor %} -->
+                {% else %}
+                    {{ form.password(class='form-input') }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class='btn btn-primary') }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
