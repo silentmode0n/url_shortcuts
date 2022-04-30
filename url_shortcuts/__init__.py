@@ -57,6 +57,7 @@ from url_shortcuts.models import Users
 
 from url_shortcuts.forms import PasswordForm
 from url_shortcuts.forms import LoginForm
+from url_shortcuts.forms import RegistrationForm
 
 
 def generate_shortcut_id():
@@ -88,6 +89,16 @@ def add_record_to_shortcuts(url, shortcut_id, password=None):
     if password:
         new_item.set_password(password)
     db.session.add(new_item)
+    db.session.commit()
+
+
+def add_record_to_users(name, email, password):
+    new_user = Users(
+        name=name,
+        email=email,
+        )
+    new_user.set_password(password)
+    db.session.add(new_user)
     db.session.commit()
 
 
@@ -136,6 +147,7 @@ def load_session_id():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -150,7 +162,7 @@ def login():
         else:
             push_message('Почта или пароль не верные!', type='error')
 
-    return render_template('login.html', form=form)     
+    return render_template('login.html', form=form)
     
 
 @app.route("/logout")
@@ -160,8 +172,65 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/registrarion', methods=['GET', 'POST'])
+def registration():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+
+        try:
+            add_record_to_users(name, email, password)
+            push_message('Вы успешно зарегистрировались. Теперь можете войти.', type='success')
+            return redirect(url_for('login'))
+        except IntegrityError:
+            db.session.rollback()
+            push_message(
+                'Произошла ошибка записи данных. Попробуйте снова.',
+                type='error')
+
+    return render_template('registration.html', form=form)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+
+    if request.method == 'POST':
+        url = request.form.get('url')
+
+        errors = False
+
+        if not url:
+            errors = True
+            push_message('Укажите адрес ссылки.', type='worning')
+
+        if not errors:
+            shortcut_id = generate_shortcut_id()
+            try:
+                add_record_to_shortcuts(url, shortcut_id)
+                push_message('Ярлык успешно создан. Можете поделиться им.', type='success')
+                return redirect(url_for('index'))
+            except IntegrityError:
+                db.session.rollback()
+                push_message(
+                    'Произошла ошибка записи данных. Попробуйте снова.',
+                    type='error')
+
+    shortcuts = Shortcuts.query.filter_by(
+        session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
+
+    return render_template('index.html', shortcuts=shortcuts)
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
     if request.method == 'POST':
         url = request.form.get('url')
         custom_id = request.form.get('custom')
@@ -196,11 +265,10 @@ def index():
                     'Имя ярлыка должно быть уникальным. Попробуйте снова.',
                     type='error')
 
-
     shortcuts = Shortcuts.query.filter_by(
         session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
 
-    return render_template('index.html', shortcuts=shortcuts)
+    return render_template('dashboard.html', shortcuts=shortcuts)
 
 
 @app.route('/<shortcut_id>', methods=['GET', 'POST'])

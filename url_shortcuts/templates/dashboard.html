@@ -15,6 +15,39 @@
                     placeholder="https://длинная-длинная-ссылка.ru" 
                     value="{{ request.form.get('url', '') }}" 
                     autofocus>
+                <label class="form-switch">
+                    <input 
+                    type="checkbox" 
+                    name="custom_on" 
+                    id="custom_on"
+                    onclick="hideCustomId()"
+                    {{ 'checked' if request.form['custom_on'] else '' }}>
+                    <i class="form-icon"></i>
+                    Указать имя ярлыка
+                </label>
+                <input 
+                    class="form-input" 
+                    type="text" 
+                    name="custom" 
+                    id="custom" 
+                    placeholder="введите желаемое имя ярлыка"
+                    value="{{ request.form.get('custom', '') }}">
+                <label class="form-switch">
+                    <input 
+                        type="checkbox" 
+                        name="password_on" 
+                        id="password_on"
+                        onclick="hidePassword()"
+                        {{ 'checked' if request.form['password_on'] else '' }}>
+                    <i class="form-icon"></i>
+                    Установить пароль
+                </label>
+                <input 
+                    class="form-input" 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    placeholder="введите пароль">
             </div>
             <div class="form-group">
                 <button 
@@ -28,7 +61,6 @@
     </div>
     <br> 
     {% if shortcuts %}
-    <a href="{{ url_for('clear') }}" class="btn btn-link">Очистить</a> <!-- TODO set visibility clear button-->
     <div class="column">
         <table class="table">
             <head>
@@ -48,7 +80,7 @@
                         </th>
                         <th>
                             <a href="{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
-                                <i class="icon icon-apps"></i>
+                                <i class="icon icon-share"></i>
                             </a>
                         </th>
                         <th>
