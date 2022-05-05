@@ -121,6 +121,11 @@ def get_qr_file_buffer(data):
     return buf
 
 
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'Users': Users, 'Shortcuts': Shortcuts}
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
