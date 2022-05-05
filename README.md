@@ -18,7 +18,8 @@ For frontend i use [Spectre.css](https://github.com/picturepan2/spectre) - A Lig
 
 - [x] show logo before redirecting for link
 - [x] Sessions
-- [ ] Login and Profile
+- [x] Personal account 
+- [ ] Profile
 - [x] Set password on link (*optional*)
 - [x] Manual input shortcut id
 - [x] QR-code for link
@@ -29,6 +30,7 @@ For frontend i use [Spectre.css](https://github.com/picturepan2/spectre) - A Lig
 
 ## Versions
 
++ 0.7.0 *add personal account, login and register forms*
 + 0.6.4 *in model Shortcuts.url increase from 500 to 1000 characters*
 + 0.6.3 *add Flask-Forms and CSRF protection*
 + 0.6.2 *changed language pages to rus*
