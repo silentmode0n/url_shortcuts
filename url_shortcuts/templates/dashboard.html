@@ -68,6 +68,8 @@
                     <th>Ярлык</th>
                     <th>QR-код</th>
                     <th>Создан</th>
+                    <th>Переходов</th>
+                    <th>Последний переход</th>
                 </tr>
             </head>
             <tbody>
@@ -85,6 +87,12 @@
                         </th>
                         <th>
                             {{ shortcut.created | datetime }}
+                        </th>
+                        <th>
+                            {{ shortcut.visits }}
+                        </th>
+                        <th>
+                            {{ shortcut.last_visited | datetime }}
                         </th>
                     </tr>
                 {% endfor %}

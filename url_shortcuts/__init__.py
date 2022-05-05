@@ -1,4 +1,4 @@
-__version__ = '0.6.4'
+__version__ = '0.7.0'
 __author__ = 'silentmode0n'
 
 
@@ -92,6 +92,18 @@ def add_record_to_shortcuts(url, shortcut_id, password=None):
     db.session.commit()
 
 
+def create_shortcut(url, id, user=None, password=None):
+    shortcut = Shortcuts(url=url, shortcut_id=id)
+
+    if password:
+        shortcut.set_password(password)
+    if user:
+        shortcut.owner = user
+    
+    db.session.add(shortcut)
+    db.session.commit()
+
+
 def add_record_to_users(name, email, password):
     new_user = Users(
         name=name,
@@ -134,7 +146,7 @@ def load_user(user_id):
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, format=None):
     format = format if format else '%d.%m.%Y %H:%M:%S'
-    return date.strftime(format)
+    return date.strftime(format) if date else ''
 
 
 @app.before_request
@@ -261,9 +273,15 @@ def dashboard():
         if not errors:
             shortcut_id = custom_id if custom_on else generate_shortcut_id()
             try:
-                add_record_to_shortcuts(url, shortcut_id, password)
+                create_shortcut(
+                    url=url,
+                    id=shortcut_id,
+                    user=current_user,
+                    password=password)
+
                 push_message('Ярлык успешно создан. Можете поделиться им.', type='success')
-                return redirect(url_for('index'))
+                return redirect(url_for('dashboard'))
+
             except IntegrityError:
                 db.session.rollback()
                 push_message(
@@ -271,21 +289,23 @@ def dashboard():
                     type='error')
 
     shortcuts = Shortcuts.query.filter_by(
-        session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
+        owner=current_user).order_by(Shortcuts.created.desc()).all()
 
     return render_template('dashboard.html', shortcuts=shortcuts)
 
 
 @app.route('/<shortcut_id>', methods=['GET', 'POST'])
 @check_link
-def redirect_url(shortcut_id):
+def redirect_url(shortcut_id):  # TODO refactoring
     if not g.shortcut.password_hash:
-            return render_template('redirect.html', link=g.shortcut.url)
+        g.shortcut.mark_visit()
+        return render_template('redirect.html', link=g.shortcut.url)
             
     form = PasswordForm()
     if form.validate_on_submit():
         password = form.password.data
         if g.shortcut.check_password(password):
+            g.shortcut.mark_visit()
             return render_template('redirect.html', link=g.shortcut.url)
         push_message('Пароль не верный!', type='error')
 

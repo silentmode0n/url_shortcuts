@@ -28,6 +28,8 @@ class Shortcuts(db.Model):
     def mark_visit(self):
         self.last_visited = datetime.now()
         self.visits += 1
+        db.session.add(self)
+        db.session.commit()
 
 
 class Users(UserMixin, db.Model):
