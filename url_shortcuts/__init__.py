@@ -1,4 +1,4 @@
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 __author__ = 'silentmode0n'
 
 
@@ -148,7 +148,7 @@ def load_user(user_id):
 
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, format=None):
-    format = format if format else '%d.%m.%Y %H:%M:%S'
+    format = format if format else '%d.%m.%Y'
     return date.strftime(format) if date else ''
 
 
@@ -330,6 +330,25 @@ def get_qr(shortcut_id):
         download_name=f'{shortcut_id}.jpg',
         mimetype='image/jpeg',
     )
+
+
+@app.route('/delete/<shortcut_id>')
+@login_required
+@check_link
+def delete(shortcut_id):
+    try:
+        db.session.delete(g.shortcut)
+        db.session.commit()
+        push_message(
+            'Ссылка <{}> удалена.'.format(g.shortcut.shortcut_id),
+            type='warning')
+    except IntegrityError:
+        db.session.rollback()
+        push_message(
+            'Произошла ошибка записи данных. Попробуйте снова.',
+            type='error')
+    finally:
+        return redirect(url_for('dashboard'))
 
 
 @app.errorhandler(404)

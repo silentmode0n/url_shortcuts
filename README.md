@@ -23,13 +23,14 @@ For frontend i use [Spectre.css](https://github.com/picturepan2/spectre) - A Lig
 - [x] Set password on link (*optional*)
 - [x] Manual input shortcut id
 - [x] QR-code for link
-- [ ] Statistics on transitions
+- [x] Statistics on transitions
 - [ ] Title for link
 - [ ] Сaсhing links for guests
 - [ ] API
 
 ## Versions
 
+* 0.8.0 *added statistics for transitions and buttons of action*
 + 0.7.0 *add personal account, login and register forms*
 + 0.6.4 *in model Shortcuts.url increase from 500 to 1000 characters*
 + 0.6.3 *add Flask-Forms and CSRF protection*

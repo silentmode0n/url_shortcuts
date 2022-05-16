@@ -62,28 +62,34 @@
     <br> 
     {% if shortcuts %}
     <div class="column">
-        <table class="table">
-            <head>
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
                     <th>Ярлык</th>
-                    <th>QR-код</th>
                     <th>Создан</th>
                     <th>Переходов</th>
-                    <th>Последний переход</th>
+                    <th>Последний</th>
+                    <th>Пароль</th>
+                    <th>Действия</th>
                 </tr>
-            </head>
+            </thead>
             <tbody>
                 {% for shortcut in shortcuts %}
-                    <tr class="active">
+                    <tr>
                         <th>
-                            <a href="{{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
-                                {{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}
-                            </a>
-                        </th>
-                        <th>
-                            <a href="{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}" target="_blank" role="button">
-                                <i class="icon icon-share"></i>
-                            </a>
+                            <div class="popover popover-bottom">
+                                <a href="{{ shortcut.url }}" target="_blank" role="button">
+                                    {{ shortcut.shortcut_id }}
+                                </a>
+                                <div class="popover-container">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            {{ shortcut.url }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </th>
                         <th>
                             {{ shortcut.created | datetime }}
@@ -94,6 +100,51 @@
                         <th>
                             {{ shortcut.last_visited | datetime }}
                         </th>
+                        <th>
+                            {% if shortcut.password_hash %}
+                                <i class="icon icon-check text-success"></i>
+                            {% else %}
+                                <i class="icon icon-cross text-warning"></i>
+                            {% endif %}
+                        </th>
+                        <th>
+                            <div class="popover popover-bottom">
+                                <button class="btn btn-link" onclick="handleCopyToClipboard('{{ url_for('redirect_url', shortcut_id=shortcut.shortcut_id, _external=True) }}')">
+                                    <i class="icon icon-copy text-primary"></i>
+                                </button>
+                                <div class="popover-container">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            Копировать
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>&nbsp;
+                            <div class="popover popover-bottom">
+                                <button class="btn btn-link" onclick="handleTransition('{{ url_for('get_qr', shortcut_id=shortcut.shortcut_id, _external=True) }}', '_blank')">
+                                    <i class="icon icon-apps text-primary"></i>
+                                </button>
+                                <div class="popover-container">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            QR-код
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>&nbsp;
+                            <div class="popover popover-bottom">
+                                <button class="btn btn-link" onclick="handleConfirmTransition('{{ url_for('delete', shortcut_id=shortcut.shortcut_id) }}', 'Удалить ссылку?')">
+                                    <i class="icon icon-delete text-error"></i>
+                                </button>
+                                <div class="popover-container">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            Удалить
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>&nbsp;
+                        </th>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -101,4 +152,5 @@
     </div>
     {% endif %}
     <script src="{{ url_for('static', filename='js/checkboxhide.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/button_events.js') }}"></script>
 {% endblock %}
