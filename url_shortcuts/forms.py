@@ -1,6 +1,4 @@
-import imp
 from flask_wtf import FlaskForm
-from sqlalchemy import true
 
 from wtforms import PasswordField
 from wtforms import StringField

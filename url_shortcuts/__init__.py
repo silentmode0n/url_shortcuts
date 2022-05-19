@@ -2,10 +2,8 @@ __version__ = '0.8.0'
 __author__ = 'silentmode0n'
 
 
-from crypt import methods
 import functools
 import uuid
-import os
 import io
 import qrcode
 
@@ -32,25 +30,12 @@ from flask_login import login_user
 from flask_login import logout_user
 from flask_login import login_required
 
-
-SECRET_KEY = os.environ.get('SECRET_KEY') or uuid.uuid4().hex
-DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///shortcuts.db'
-if DATABASE_URI.startswith("postgres://"):
-    DATABASE_URI = DATABASE_URI.replace("postgres://", "postgresql://", 1)
-
-FLASH_TYPES = {
-        'worning': 'toast toast-worning',
-        'success': 'toast toast-success',
-        'error': 'toast toast-error',
-    }
+from config import FLASH_TYPES
 
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['CSRF_ENABLED'] = True
+app.config.from_object('config')
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
