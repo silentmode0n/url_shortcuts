@@ -6,6 +6,7 @@ import functools
 import uuid
 import io
 import qrcode
+import os
 
 from flask import Flask
 from flask import url_for
@@ -17,6 +18,7 @@ from flask import session
 from flask import g
 from flask import send_file
 from flask import abort
+from flask import send_from_directory
 
 from werkzeug.urls import url_parse
 
@@ -146,6 +148,15 @@ def load_session_id():
     else:
         g.session_id = generate_session_id()
         session['session_id'] = g.session_id
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 
 
 @app.route('/login', methods=['GET', 'POST'])
