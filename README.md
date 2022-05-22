@@ -8,7 +8,7 @@ A simple web app that creates shortcuts for long urls.
 
 ## Status
 
-Not finished...
+In development
 
 ## CSS
 
