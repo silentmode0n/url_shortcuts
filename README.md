@@ -24,12 +24,14 @@ For frontend i use [Spectre.css](https://github.com/picturepan2/spectre) - A Lig
 - [x] Manual input shortcut id
 - [x] QR-code for link
 - [x] Statistics on transitions
+- [x] Active status
 - [ ] Title for link
 - [ ] Сaсhing links for guests
 - [ ] API
 
 ## Versions
 
+* 0.9.0 *added active/notactive status for shotrcuts*
 * 0.8.0 *added statistics for transitions and buttons of action*
 + 0.7.0 *add personal account, login and register forms*
 + 0.6.4 *in model Shortcuts.url increase from 500 to 1000 characters*

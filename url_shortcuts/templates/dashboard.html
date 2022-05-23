@@ -133,6 +133,31 @@
                                 </div>
                             </div>&nbsp;
                             <div class="popover popover-bottom">
+                                {% if shortcut.is_active %}
+                                <button class="btn btn-link" onclick="handleConfirmTransition('{{ url_for('switch', shortcut_id=shortcut.shortcut_id) }}', 'Деактивировать ссылку?')">
+                                    <i class="icon icon-shutdown text-warning"></i>
+                                </button>
+                                <div class="popover-container">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            Деактивировать
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <button class="btn btn-link" onclick="handleConfirmTransition('{{ url_for('switch', shortcut_id=shortcut.shortcut_id) }}', 'Активировать ссылку?')">
+                                    <i class="icon icon-refresh text-success"></i>
+                                </button>
+                                <div class="popover-container">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            Активировать
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>&nbsp;
+                            <div class="popover popover-bottom">
                                 <button class="btn btn-link" onclick="handleConfirmTransition('{{ url_for('delete', shortcut_id=shortcut.shortcut_id) }}', 'Удалить ссылку?')">
                                     <i class="icon icon-delete text-error"></i>
                                 </button>

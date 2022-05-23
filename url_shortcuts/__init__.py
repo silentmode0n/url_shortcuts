@@ -1,4 +1,4 @@
-__version__ = '0.8.0'
+__version__ = '0.9.0'
 __author__ = 'silentmode0n'
 
 
@@ -296,6 +296,8 @@ def dashboard():
 @app.route('/<shortcut_id>', methods=['GET', 'POST'])
 @check_link
 def redirect_url(shortcut_id):  # TODO refactoring
+    if not g.shortcut.is_active:
+        abort(404)
     if not g.shortcut.password_hash:
         g.shortcut.mark_visit()
         return render_template('redirect.html', link=g.shortcut.url)
@@ -345,6 +347,31 @@ def delete(shortcut_id):
             type='error')
     finally:
         return redirect(url_for('dashboard'))
+
+
+@app.route('/switch/<shortcut_id>')
+@login_required
+@check_link
+def switch(shortcut_id):
+    try:
+        shortcut = g.shortcut
+        if shortcut.is_active:
+            shortcut.switch_off()
+            push_message(
+                'Ссылка <{}> деактивирована.'.format(g.shortcut.shortcut_id),
+                type='warning')
+        else:
+            shortcut.switch_on()
+            push_message(
+                'Ссылка <{}> активирована.'.format(g.shortcut.shortcut_id),
+                type='warning')
+    except IntegrityError:
+        db.session.rollback()
+        push_message(
+            'Произошла ошибка записи данных. Попробуйте снова.',
+            type='error')
+    finally:
+        return redirect(request.referrer)
 
 
 @app.errorhandler(404)

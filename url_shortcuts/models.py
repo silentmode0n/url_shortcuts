@@ -15,6 +15,7 @@ class Shortcuts(db.Model):
     session_id = db.Column(db.String(40), unique=False)
     password_hash = db.Column(db.String(128))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
 
     def __repr__(self):
         return '<Shortcut id:{} link:{}>'.format(self.shortcut_id, self.url)
@@ -30,6 +31,18 @@ class Shortcuts(db.Model):
         self.visits += 1
         db.session.add(self)
         db.session.commit()
+
+    def switch_on(self):
+        if not self.is_active:
+            self.is_active = True
+            db.session.add(self)
+            db.session.commit()
+
+    def switch_off(self):
+        if self.is_active:
+            self.is_active = False
+            db.session.add(self)
+            db.session.commit()
 
 
 class Users(UserMixin, db.Model):
