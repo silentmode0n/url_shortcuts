@@ -1,0 +1,23 @@
+<ul class="pagination">
+    {% if prev_url %}
+        <li class="page-item page-prev">
+            <a href="{{ prev_url }}">Назад</a>
+        </li>
+    {% else %}
+        <li class="page-item page-prev disabled">
+            <a href="#">---</a>
+        </li>
+    {% endif %}
+    <li class="page-item active">
+        <a href="#">{{ page }}</a>
+    </li>
+    {% if next_url %}
+        <li class="page-item page-next">
+            <a href="{{ next_url }}">Вперёд</a>
+        </li>
+    {% else %}
+        <li class="page-item page-next disabled text-right">
+            <a href="#">---</a> 
+        </li>
+    {% endif %}
+  </ul>

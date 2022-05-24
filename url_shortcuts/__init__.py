@@ -1,4 +1,4 @@
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 __author__ = 'silentmode0n'
 
 
@@ -238,10 +238,24 @@ def index():
                     'Произошла ошибка записи данных. Попробуйте снова.',
                     type='error')
 
-    shortcuts = Shortcuts.query.filter_by(
-        session_id=g.session_id).order_by(Shortcuts.created.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    per_page = app.config.get('LINKS_PER_PAGE')
 
-    return render_template('index.html', shortcuts=shortcuts)
+    shortcuts = Shortcuts.query.filter_by(
+        session_id=g.session_id).order_by(Shortcuts.created.desc()).paginate(
+            page, per_page, False
+        )
+
+    prev_url = url_for('index', page=shortcuts.prev_num) if shortcuts.has_prev else None
+    next_url = url_for('index', page=shortcuts.next_num) if shortcuts.has_next else None
+
+    return render_template(
+        'index.html',
+        shortcuts=shortcuts.items,
+        prev_url=prev_url,
+        page=page,
+        next_url=next_url
+        )
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -287,10 +301,24 @@ def dashboard():
                     'Имя ярлыка должно быть уникальным. Попробуйте снова.',
                     type='error')
 
-    shortcuts = Shortcuts.query.filter_by(
-        owner=current_user).order_by(Shortcuts.created.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    per_page = app.config.get('LINKS_PER_PAGE')
 
-    return render_template('dashboard.html', shortcuts=shortcuts)
+    shortcuts = Shortcuts.query.filter_by(
+        owner=current_user).order_by(Shortcuts.created.desc()).paginate(
+            page, per_page, False
+        )
+
+    prev_url = url_for('dashboard', page=shortcuts.prev_num) if shortcuts.has_prev else None
+    next_url = url_for('dashboard', page=shortcuts.next_num) if shortcuts.has_next else None
+
+    return render_template(
+        'dashboard.html',
+        shortcuts=shortcuts.items,
+        prev_url=prev_url,
+        page=page,
+        next_url=next_url
+        )
 
 
 @app.route('/<shortcut_id>', methods=['GET', 'POST'])

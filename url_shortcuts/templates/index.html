@@ -59,6 +59,9 @@
             </tbody>
         </table>
     </div>
+    <div class="column col-3 p-centered">
+        {% include '_pagination.html' %}
+    </div>
     {% endif %}
     <script src="{{ url_for('static', filename='js/checkboxhide.js') }}"></script>
 {% endblock %}
