@@ -26,4 +26,4 @@ FLASH_TYPES = {
         'error': 'toast toast-error',
     }
 
-LINKS_PER_PAGE = os.environ.get('LINKS_PER_PAGE') or 5
+LINKS_PER_PAGE = int(os.environ.get('LINKS_PER_PAGE')) or 5
